@@ -12,3 +12,10 @@ Cargo.lock
 
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
+
+# vim swap files
+**/*.swp
+
+# Data folder - have to provide this yourself, sorry.
+# https://www.reddit.com/r/adventofcode/comments/e7khy8/comment/fa13hb9/
+data/
