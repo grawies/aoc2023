@@ -1,6 +1,9 @@
 mod day_1;
+mod day_3;
 
 use std::env;
+use std::fs;
+use std::path::{Path, PathBuf};
 
 struct Config {
     days: Vec<usize>,
@@ -59,13 +62,25 @@ fn parse_flags() -> Config {
     return config;
 }
 
+fn read_input_file(file_path: PathBuf) -> String {
+    let file_content = fs::read_to_string(&file_path);
+    match file_content {
+        Ok(text) => {
+            return text.trim().to_string();
+        }
+        Err(_) => {
+            panic!("unable to read file: {}", file_path.to_string_lossy())
+        }
+    }
+}
+
 type Solution = fn(&String) -> ();
 
 fn solutions() -> [Vec<Solution>; 25] {
     return [
         vec![day_1::solve_part_1, day_1::solve_part_2],
         vec![],
-        vec![],
+        vec![day_3::solve_part_1, day_3::solve_part_2],
         vec![],
         vec![],
         vec![],
@@ -103,6 +118,11 @@ fn main() {
     let config = parse_flags();
     let solutions = solutions();
     for day in config.days {
+        let input_text = read_input_file(
+            Path::new("data")
+                .join(format!("day_{}", day))
+                .join(&config.input_file),
+        );
         let solution = &solutions[day - 1];
         if solution.len() == 0 {
             continue;
@@ -110,11 +130,11 @@ fn main() {
         println!(" --- Day {}", day);
         if config.part1 {
             println!(" ------ Part One");
-            solution[0](&config.input_file);
+            solution[0](&input_text);
         }
         if config.part2 && solution.len() >= 2 {
             println!(" ------ Part Two");
-            solution[1](&config.input_file);
+            solution[1](&input_text);
         }
     }
 }

@@ -1,34 +1,19 @@
 use std::collections::HashMap;
-use std::fs;
-use std::path::Path;
 
-fn get_lines(input_file: &String) -> Vec<String> {
-    let file_path = Path::new("data/day_1").join(input_file);
-    let file_content = fs::read_to_string(&file_path);
-    match file_content {
-        Ok(text) => {
-            return text.trim().split("\n").map(|s| s.to_string()).collect();
-        }
-        Err(_) => {
-            panic!("unable to read file: {}", file_path.to_string_lossy())
-        }
-    }
-}
-
-pub fn solve_part_1(input_file: &String) -> () {
-    let calibration_sum: i32 = solve_either(input_file, /*include_words=*/ false);
+pub fn solve_part_1(text: &String) -> () {
+    let calibration_sum: i32 = solve_either(text, /*include_words=*/ false);
     println!("Calibration value sum:  {}", calibration_sum);
     println!("Expected puzzle answer: 53194");
 }
 
-pub fn solve_part_2(input_file: &String) -> () {
-    let calibration_sum: i32 = solve_either(input_file, /*include_words=*/ true);
+pub fn solve_part_2(text: &String) -> () {
+    let calibration_sum: i32 = solve_either(text, /*include_words=*/ true);
     println!("Calibration value sum:  {}", calibration_sum);
     println!("Expected puzzle answer: 54249");
 }
 
-fn solve_either(input_file: &String, include_words: bool) -> i32 {
-    let lines = get_lines(input_file);
+fn solve_either(text: &String, include_words: bool) -> i32 {
+    let lines: Vec<String> = text.split("\n").map(|s| s.to_string()).collect();
     let mut str_to_digit: HashMap<&str, i32> = HashMap::from([
         ("0", 0),
         ("1", 1),
