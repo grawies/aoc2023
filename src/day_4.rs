@@ -58,10 +58,6 @@ pub fn solve_part_2(text: &String) -> () {
     for line in lines {
         num_cards += 1;
         let (card_number, num_winning) = score_card(&line);
-        if num_winning == 0 {
-            num_cards_generated_from_card.insert(card_number, 0);
-            continue;
-        }
         let mut num_generated = 0;
         for i in card_number + 1..card_number + num_winning + 1 {
             num_generated += 1;
