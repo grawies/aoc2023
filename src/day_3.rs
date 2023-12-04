@@ -66,8 +66,8 @@ fn parse_input(text: &String) -> (Vec<Part>, HashSet<(i32, i32)>, HashSet<(i32, 
     return (parts, symbol_ps, gear_symbol_ps);
 }
 
-pub fn solve_part_1(file_path: &String) -> () {
-    let (parts, symbol_ps, _) = parse_input(file_path);
+pub fn solve_part_1(text: &String) -> () {
+    let (parts, symbol_ps, _) = parse_input(text);
 
     let mut part_number_sum: i64 = 0;
     for part in parts {
@@ -87,8 +87,8 @@ pub fn solve_part_1(file_path: &String) -> () {
     println!("Expected puzzle answer: 550064");
 }
 
-pub fn solve_part_2(file_path: &String) -> () {
-    let (parts, _, gear_symbol_ps) = parse_input(file_path);
+pub fn solve_part_2(text: &String) -> () {
+    let (parts, _, gear_symbol_ps) = parse_input(text);
 
     // Map gear symbol positions to their adjacent part numbers.
     let mut gear_adj_nums: HashMap<(i32, i32), Vec<i64>> = HashMap::new();
