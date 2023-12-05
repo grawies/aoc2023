@@ -84,7 +84,7 @@ fn solutions() -> [Vec<Solution>; 25] {
         vec![],
         vec![day_3::solve_part_1, day_3::solve_part_2],
         vec![day_4::solve_part_1, day_4::solve_part_2],
-        vec![day_5::solve_part_1],
+        vec![day_5::solve_part_1, day_5::solve_part_2],
         vec![],
         vec![],
         vec![],
