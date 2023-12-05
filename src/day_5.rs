@@ -1,6 +1,3 @@
-//use std::collections::HashMap;
-//use std::collections::HashSet;
-
 pub fn solve_part_1(text: &String) -> () {
     let lines: Vec<String> = text.split("\n").map(|s| s.to_string()).collect();
     let mut it = lines.iter();
