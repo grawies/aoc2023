@@ -81,7 +81,7 @@ type Solution = fn(&String) -> ();
 fn solutions() -> [Vec<Solution>; 25] {
     return [
         vec![day_1::solve_part_1, day_1::solve_part_2],
-        vec![day_2::solve_part_1],
+        vec![day_2::solve_part_1, day_2::solve_part_2],
         vec![day_3::solve_part_1, day_3::solve_part_2],
         vec![day_4::solve_part_1, day_4::solve_part_2],
         vec![],
