@@ -136,7 +136,11 @@ pub fn solve_part_1(text: &String) -> () {
 pub fn solve_part_2(text: &String) -> () {
     let lines: Vec<String> = text.split("\n").map(|s| s.to_string()).collect();
     let mut hands: Vec<(&str, u64)> = lines.iter().map(|s| parse_row(s)).collect();
-    hands.sort_by_key(|(h, _)| compute_max_key_with_joker(h));
+    let mut hand_to_key_map: HashMap<&str, u64> = HashMap::new();
+    for (hand, _) in &hands {
+        hand_to_key_map.insert(hand, compute_max_key_with_joker(&hand));
+    }
+    hands.sort_by_key(|(h, _)| hand_to_key_map.get(h).expect("missing hand"));
 
     let mut total_winnings = 0;
     for (i, (_, bid)) in hands.iter().enumerate() {
