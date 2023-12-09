@@ -5,6 +5,7 @@ mod day_4;
 mod day_5;
 mod day_6;
 mod day_7;
+mod day_8;
 mod day_9;
 
 use std::env;
@@ -91,7 +92,7 @@ fn solutions() -> [Vec<Solution>; 25] {
         vec![day_5::solve_part_1, day_5::solve_part_2],
         vec![day_6::solve_part_1, day_6::solve_part_2],
         vec![day_7::solve_part_1, day_7::solve_part_2],
-        vec![],
+        vec![day_8::solve_part_1, day_8::solve_part_2],
         vec![day_9::solve_part_1, day_9::solve_part_2],
         vec![],
         vec![],
