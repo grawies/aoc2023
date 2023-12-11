@@ -70,7 +70,6 @@ pub fn solve_part_2(text: &String) -> () {
     let positions = parse_positions(text);
     let distance_sum =
         galaxy_distance_sum(positions, /*galaxy_expansion_multiplier*/ 1_000_000);
-    // 82000210 too low
 
     println!("Sum of distances:       {distance_sum}");
     println!("Expected puzzle answer: 593821230983");
