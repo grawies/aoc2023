@@ -1,6 +1,6 @@
-use std::cmp;
+use crate::geometry::Point;
 
-type Point = (i64, i64);
+use std::cmp;
 
 // Reads the coordinates of all '#' characters.
 fn parse_positions(text: &String) -> Vec<Point> {
@@ -9,7 +9,10 @@ fn parse_positions(text: &String) -> Vec<Point> {
     for (y, line) in lines.iter().enumerate() {
         for (x, c) in line.chars().enumerate() {
             if c == '#' {
-                ps.push((x as i64, y as i64));
+                ps.push(Point {
+                    x: x as i64,
+                    y: y as i64,
+                });
             }
         }
     }
@@ -37,20 +40,20 @@ fn count_gaps(vs: Vec<i64>) -> Vec<i64> {
 }
 
 fn galaxy_distance_sum(positions: Vec<Point>, galaxy_expansion_multiplier: i64) -> i64 {
-    let mut xpos = positions.iter().map(|(x, _)| *x).collect::<Vec<i64>>();
-    let mut ypos = positions.iter().map(|(_, y)| *y).collect::<Vec<i64>>();
+    let mut xpos = positions.iter().map(|p| p.x).collect::<Vec<i64>>();
+    let mut ypos = positions.iter().map(|p| p.y).collect::<Vec<i64>>();
     xpos.sort();
     ypos.sort();
     let x_gaps_csum = count_gaps(xpos);
     let y_gaps_csum = count_gaps(ypos);
     let mut distance_sum = 0;
-    for (i, (px, py)) in positions.iter().enumerate() {
-        for (qx, qy) in positions[..i].iter() {
-            let naive_distance = (px - qx).abs() + (py - qy).abs();
+    for (i, p) in positions.iter().enumerate() {
+        for q in positions[..i].iter() {
+            let naive_distance = (*p - *q).x.abs() + (*p - *q).y.abs();
             let extra_x_gap =
-                x_gaps_csum[*cmp::max(px, qx) as usize] - x_gaps_csum[*cmp::min(px, qx) as usize];
+                x_gaps_csum[cmp::max(p.x, q.x) as usize] - x_gaps_csum[cmp::min(p.x, q.x) as usize];
             let extra_y_gap =
-                y_gaps_csum[*cmp::max(py, qy) as usize] - y_gaps_csum[*cmp::min(py, qy) as usize];
+                y_gaps_csum[cmp::max(p.y, q.y) as usize] - y_gaps_csum[cmp::min(p.y, q.y) as usize];
             distance_sum +=
                 naive_distance + (extra_x_gap + extra_y_gap) * (galaxy_expansion_multiplier - 1);
         }

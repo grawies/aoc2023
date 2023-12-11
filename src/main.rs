@@ -10,6 +10,8 @@ mod day_7;
 mod day_8;
 mod day_9;
 
+mod geometry;
+
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
