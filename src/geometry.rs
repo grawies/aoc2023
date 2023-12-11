@@ -1,31 +1,20 @@
-use std::ops::Add;
-use std::ops::Sub;
+use auto_ops::impl_op_ex;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub struct Point {
     pub x: i64,
     pub y: i64,
 }
 
-// TODO: Use auto_ops or impl_ops to add overloads for reference types.
-// Or manually. About lifetime annotations:
-// https://web.mit.edu/rust-lang_v1.25/arch/amd64_ubuntu1404/share/doc/rust/html/book/second-edition/ch19-02-advanced-lifetimes.html
-impl Add for Point {
-    type Output = Point;
-    fn add(self, other: Point) -> Self {
-        Self {
-            x: self.x + other.x,
-            y: self.y + other.y,
-        }
-    }
-}
+impl_op_ex!(+ |a: &Point, b: &Point| -> Point {
+Point {
+    x: a.x + b.x,
+    y: a.y + b.y,
+}});
 
-impl Sub for Point {
-    type Output = Point;
-    fn sub(self, other: Point) -> Self {
-        Self {
-            x: self.x - other.x,
-            y: self.y - other.y,
-        }
+impl_op_ex!(-|a: &Point, b: &Point| -> Point {
+    Point {
+        x: a.x - b.x,
+        y: a.y - b.y,
     }
-}
+});
