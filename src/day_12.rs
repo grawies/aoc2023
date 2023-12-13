@@ -6,6 +6,7 @@ use nom::{
 use std::cmp;
 use std::collections::HashMap;
 
+// Reads a comma-separated list of integers into a vector.
 fn parse_list(input: &str) -> Vec<i64> {
     match all_consuming(separated_list1(tag(","), i64::<_, Error<_>>))(input) {
         Err(e) => {
@@ -66,23 +67,7 @@ fn count_placements(s: &str, v: Vec<i64>, cache: &mut HashMap<(String, Vec<i64>)
     return sum;
 }
 
-pub fn solve_part_1(text: &String) -> () {
-    let lines: Vec<String> = text.split("\n").map(|s| s.to_string()).collect();
-    let mut cache: HashMap<(String, Vec<i64>), i64> = HashMap::new();
-    let mut sum = 0;
-    for line in lines {
-        let space_index = line.find(' ').unwrap();
-        let s = &line[..space_index];
-        let numbers = parse_list(&line[space_index + 1..]);
-        let num_arrangements = count_placements(s, numbers, &mut cache);
-        sum += num_arrangements;
-    }
-
-    println!("Number of solutions:    {sum}");
-    println!("Expected puzzle answer: 7236");
-}
-
-pub fn solve_part_2(text: &String) -> () {
+fn count_arrangements(text: &String, row_multiplier: usize) -> i64 {
     let lines: Vec<String> = text.split("\n").map(|s| s.to_string()).collect();
     let mut cache: HashMap<(String, Vec<i64>), i64> = HashMap::new();
     let mut sum = 0;
@@ -90,20 +75,32 @@ pub fn solve_part_2(text: &String) -> () {
         let space_index = line.find(' ').unwrap();
         let input_string = &line[..space_index];
         let s = std::iter::repeat(input_string.to_string())
-            .take(5)
+            .take(row_multiplier)
             .collect::<Vec<String>>()
             .join("?");
         let input_vector = parse_list(&line[space_index + 1..]);
         let v = input_vector
             .iter()
             .cycle()
-            .take(input_vector.len() * 5)
+            .take(input_vector.len() * row_multiplier)
             .cloned()
             .collect::<Vec<i64>>();
         let num_arrangements = count_placements(&s, v.clone(), &mut cache);
         sum += num_arrangements;
     }
+    return sum;
+}
 
-    println!("Number of solutions:    {sum}");
+pub fn solve_part_1(text: &String) -> () {
+    let answer = count_arrangements(text, /*row_multiplier*/ 1);
+
+    println!("Number of solutions:    {answer}");
+    println!("Expected puzzle answer: 7236");
+}
+
+pub fn solve_part_2(text: &String) -> () {
+    let answer = count_arrangements(text, /*row_multiplier*/ 5);
+
+    println!("Number of solutions:    {answer}");
     println!("Expected puzzle answer: 11607695322318");
 }
