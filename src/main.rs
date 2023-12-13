@@ -1,6 +1,7 @@
 mod day_1;
 mod day_10;
 mod day_11;
+mod day_12;
 mod day_2;
 mod day_3;
 mod day_4;
@@ -100,7 +101,7 @@ fn solutions() -> [Vec<Solution>; 25] {
         vec![day_9::solve_part_1, day_9::solve_part_2],
         vec![day_10::solve_part_1, day_10::solve_part_2],
         vec![day_11::solve_part_1, day_11::solve_part_2],
-        vec![],
+        vec![day_12::solve_part_1, day_12::solve_part_2],
         vec![],
         vec![],
         vec![],
