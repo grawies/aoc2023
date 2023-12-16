@@ -18,3 +18,5 @@ impl_op_ex!(-|a: &Point, b: &Point| -> Point {
         y: a.y - b.y,
     }
 });
+
+impl_op_ex!(-|a: &Point| -> Point { Point { x: -a.x, y: -a.y } });
