@@ -1,6 +1,6 @@
 use auto_ops::impl_op_ex;
 
-#[derive(Clone, Copy, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq, PartialOrd, Ord)]
 pub struct Point {
     pub x: i64,
     pub y: i64,
