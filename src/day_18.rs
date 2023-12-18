@@ -93,17 +93,6 @@ fn get_hex_vector(s: &str) -> Point {
 // Uses the Shoelace formula to compute the area of the polygon specified by the trench sides.
 // https://en.wikipedia.org/wiki/Shoelace_formula
 fn compute_lagoon_volume(trench_sides: Vec<Point>) -> i64 {
-    // Dig out the trench.
-    let mut pos = Point { x: 0, y: 0 };
-    let mut polygon: Vec<Point> = Vec::new();
-    polygon.push(pos);
-    for diff_vector in trench_sides {
-        pos = pos + diff_vector;
-        polygon.push(pos);
-    }
-    // Close the polygon with a duplicate of the starting point, out of convenience.
-    polygon.push(Point { x: 0, y: 0 });
-
     // Compute area using the shoelace formula with trapezoids.
     let mut polygon_area = 0;
     // We use the midpoints of the trench tiles, which doesn't quite include the full lagoon polygon.
@@ -111,14 +100,14 @@ fn compute_lagoon_volume(trench_sides: Vec<Point>) -> i64 {
     // This maths out to half the boundary length plus one.
     let mut boundary_length = 0;
     // We do everything doubled, and halve the result, to keep things integer.
-    for i in 0..polygon.len() - 1 {
+    let mut p = Point { x: 0, y: 0 };
+    for diff_vector in trench_sides {
+        let q = p + diff_vector;
         // Add signed trapezoid area.
-        let p = polygon[i];
-        let q = polygon[i + 1];
-        polygon_area += (q.x - p.x) * (q.y + p.y);
+        polygon_area += diff_vector.x * (p.y + q.y);
         // Add boundary length.
-        let diff_vector = q - p;
         boundary_length += diff_vector.x.abs() + diff_vector.y.abs();
+        p = q;
     }
     assert!(polygon_area % 2 == 0);
     assert!(boundary_length % 2 == 0);
