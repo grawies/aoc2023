@@ -166,7 +166,6 @@ fn get_accepted_blocks(
         }
         let workflow = workflows.get(label).unwrap();
         // Apply each rule, splitting the block of values into sub-blocks that either pass or fail each rule.
-        // Some blocks may be empty - we clear those when they are popped from the stack.
         let mut remaining_block = Some(block);
         for rule in &workflow.0 {
             if remaining_block.is_none() {
