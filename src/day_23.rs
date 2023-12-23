@@ -104,8 +104,12 @@ pub fn solve_part_2(text: &String) -> () {
     // I suspect this is an NP-complete problem (longest path), unless there is some special input structure I am missing.
     // Traversing the whole graph step-by-step is too slow (I tried).
     // Instead, first reduce the graph from a 2D grid to a graph of junctions (incl. start/target node), with edges weighted by the distance of segments between junctions.
+    // Additionally, replace each Point by an index and use vectors for maps.
     // Then do a DFS on this weighted graph.
-    let mut edges: HashMap<Point, Vec<(Point, i64)>> = HashMap::new();
+    let mut edges: Vec<Vec<(usize, i64)>> = vec![Vec::new(), Vec::new()];
+    let mut point_to_index: HashMap<Point, usize> = HashMap::from([(start, 0), (target, 1)]);
+    let mut index_to_point: Vec<Point> = vec![start, target];
+    let mut num_nodes = 2;
     let mut junctions_to_search: Vec<Point> = vec![start];
     let mut searched: HashSet<Point> = HashSet::from([start]);
     let nbrs = |p| {
@@ -130,12 +134,19 @@ pub fn solve_part_2(text: &String) -> () {
                     .filter(|d| *d != -dir)
                     .collect::<Vec<Point>>();
                 if neighbor_dirs.len() != 1 {
+                    let curr_index: usize;
+                    if point_to_index.contains_key(&curr) {
+                        curr_index = *point_to_index.get(&curr).unwrap();
+                    } else {
+                        curr_index = num_nodes;
+                        index_to_point.push(curr);
+                        point_to_index.insert(curr, curr_index);
+                        edges.push(Vec::new());
+                        num_nodes += 1;
+                    }
                     // We are at a new junction / leaf node.
                     // Store the edge weight and enqueue node.
-                    edges
-                        .entry(pos)
-                        .and_modify(|v| v.push((curr, steps)))
-                        .or_insert(vec![(curr, steps)]);
+                    edges[*point_to_index.get(&pos).unwrap()].push((curr_index, steps));
                     if !searched.contains(&curr) {
                         searched.insert(curr);
                         junctions_to_search.push(curr);
@@ -147,22 +158,21 @@ pub fn solve_part_2(text: &String) -> () {
         }
     }
 
-    let mut max_to_reach: HashMap<Point, i64> = HashMap::new();
-    let mut stack: Vec<(Point, i64, HashSet<Point>)> = vec![(start, 0, HashSet::new())];
-    while let Some((pos, steps, mut visited)) = stack.pop() {
-        visited.insert(pos);
-        max_to_reach
-            .entry(pos)
-            .and_modify(|s| *s = cmp::max(steps, *s))
-            .or_insert(steps);
-        for (npos, cost) in edges.get(&pos).unwrap() {
-            if !visited.contains(&npos) {
-                stack.push((*npos, steps + cost, visited.clone()));
+    // DFS.
+    // By replacing a HashSet of visited nodes by a bitmask, we bring runtime down from 7 seconds to 0.4 seconds.
+    assert!(num_nodes < 64);
+    let mut max_to_reach: Vec<i64> = vec![0; num_nodes];
+    let mut stack: Vec<(usize, i64, u64)> = vec![(0, 0, 0)];
+    while let Some((pos, steps, visited)) = stack.pop() {
+        max_to_reach[pos] = cmp::max(steps, max_to_reach[pos]);
+        for (npos, cost) in &edges[pos] {
+            if (visited & (1 << npos)) == 0 {
+                stack.push((*npos, steps + cost, visited | (1 << pos)));
             }
         }
     }
 
-    let max_steps_to_target = max_to_reach.get(&target).unwrap();
+    let max_steps_to_target = max_to_reach[1];
 
     println!("Longest hike in steps:  {max_steps_to_target}");
     println!("Expected puzzle answer: 6442");
