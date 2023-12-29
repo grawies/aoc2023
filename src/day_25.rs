@@ -12,19 +12,10 @@ use rand::Rng;
 use std::collections::HashMap;
 use std::collections::HashSet;
 
-// Removes and returns a random element from the vector, if the vector is non-empty.
-// Does not preserve the vector ordering.
-fn remove_random<T>(vector: &mut Vec<T>) -> Option<T> {
-    let mut rng = rand::thread_rng();
-    let del_index = rng.gen_range(0..vector.len());
-    let last_index = vector.len() - 1;
-    vector.swap(del_index, last_index);
-    return vector.pop();
-}
-
 // Karger's Algorithm.
 // https://en.wikipedia.org/wiki/Karger%27s_algorithm
 // Returns a tuple of the edge cut size and the size of each resulting partition.
+// Has about 0.5% chance of finding the true minimum cut on my problem input.
 fn try_min_cut(
     neighbors_orig: Vec<Vec<usize>>,
     edges_orig: HashSet<(usize, usize)>,
@@ -39,8 +30,10 @@ fn try_min_cut(
     let mut num_removed_last = 0;
     let mut last_i = 0;
     let mut last_j = 0;
+    let mut rng = rand::thread_rng();
     while edges.len() > 0 {
-        let (mut i, mut j) = remove_random(&mut edges).unwrap();
+        let random_index = rng.gen_range(0..edges.len());
+        let (mut i, mut j) = edges.swap_remove(random_index);
         while repr[i] != i {
             i = repr[i];
         }
@@ -130,7 +123,9 @@ pub fn solve_part_1(text: &String) -> () {
     }
 
     let answer: usize;
+    let mut num_attempts = 0;
     loop {
+        num_attempts += 1;
         let (cut_size, a_size, b_size) = try_min_cut(neighbors.clone(), edges.clone());
         if cut_size == 3 {
             answer = a_size * b_size;
@@ -138,7 +133,7 @@ pub fn solve_part_1(text: &String) -> () {
         }
     }
 
-    println!("Product of partition sizes: {answer}");
+    println!("Product of partition sizes: {answer} (after {num_attempts} attempts)");
     println!("Expected puzzle answer:     582692");
 }
 
