@@ -126,7 +126,7 @@ fn solutions() -> [Vec<Solution>; 25] {
         vec![day_21::solve_part_1, day_21::solve_part_2],
         vec![day_22::solve_part_1, day_22::solve_part_2],
         vec![day_23::solve_part_1, day_23::solve_part_2],
-        vec![day_24::solve_part_1], //day_24::solve_part_2],
+        vec![day_24::solve_part_1, day_24::solve_part_2],
         vec![day_25::solve_part_1],
     ];
 }
