@@ -28,3 +28,12 @@ $ target/release/aoc2023
 # on respective input files "data/day_1/test1" and "data/day_2/test1".
 $ target/release/aoc2023 --days=1,2 --part2 --input_file=test1
 ```
+
+Missing Rust? Installing on Ubuntu:
+```
+# Install Rust
+sudo apt-get install rustup
+
+# Download and configure the latest stable release.
+rustup default stable
+```
